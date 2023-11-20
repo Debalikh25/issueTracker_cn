@@ -1,0 +1,19 @@
+{
+  "name": "issuetracker-cn",
+  "version": "1.0.0",
+  "description": "issue tracker app",
+  "main": "server.js",
+  "scripts": {
+    "start" : "nodemon server.js",
+    "test": "This is an issue tracker app"
+  },
+  "author": "Debalikh Chatterjee",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-ejs-layouts": "^2.5.1",
+    "mongoose": "^8.0.1",
+    "nodemon": "^3.0.1"
+  }
+}

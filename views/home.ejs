@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="/css/style.css" />
+<div class="container mt-4">
+  <% if(locals.empty){ %>
+
+  <h2>No Projects Found :</h2>
+
+  <% } else {%>
+
+  <h2>Projects :</h2>
+
+  <div class="row">
+    <% for(let project of projects){ %>
+    <div class="col-md-6">
+      <div class="card mt-4">
+        <div class="card-body">
+          <h5 class="card-title"><%= project.name %></h5>
+          <h6 class="card-subtitle mb-2 text-muted"><%= project.author %></h6>
+          <p class="card-text"><%= project.description %></p>
+          <a href="/project-details/<%= project._id %>" class="card-link"
+            >View</a
+          >
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <% } %>
+</div>

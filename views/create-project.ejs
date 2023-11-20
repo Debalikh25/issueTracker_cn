@@ -1,0 +1,72 @@
+<div class="container mt-4">
+  <h3>Create Project</h3>
+
+  <form id="createProjectForm">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="form-control"
+        placeholder="Enter project name"
+        required
+        id="name"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        class="form-control"
+        placeholder="Description"
+        required
+      ></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="author">Author</label>
+      <input
+        type="text"
+        id="author"
+        name="author"
+        class="form-control"
+        placeholder="Enter author's name"
+        required
+        id="author"
+      />
+    </div>
+
+    <input type="submit" value="Create Project" class="btn btn-success" />
+  </form>
+</div>
+
+<script type="text/javascript">
+  $("#createProjectForm").submit((e) => {
+    e.preventDefault();
+    const name = $("#name").val();
+    const description = $("#description").val();
+    const author = $("#author").val();
+    const data = {
+      name,
+      author,
+      description,
+    };
+
+    $.ajax({
+      url: "/create-project",
+      method: "POST",
+      data: data,
+      success: function (data) {
+        alert(data.message + " | Project ID : " + data.project._id);
+        window.location.reload();
+      },
+
+      error: function (err) {
+        alert("Error Creating Project " + err.message);
+      },
+    });
+  });
+</script>

@@ -1,0 +1,146 @@
+<div class="container mt-5">
+
+    <div class="ml-auto" style="float : right;">
+       
+         <button class="btn btn-info" id="create-issue-btn" data-toggle="modal" data-target="#exampleModal">Create Issue</button>
+
+    </div>
+
+      <h3>Project Name : <%= locals.project.name %></h3>
+      <p style="color : grey;">Id :  <%= locals.project._id %>  |  Author :  <%= locals.project.author %></p>
+      <small style="color : grey;">Created At :<%= locals.project.createdAt %> </small>
+
+      <% if(locals.project.issues.length > 0){ %>
+        <h4 class="mt-2" style="color:red;"><%= locals.project.issues.length %> Issue(s) Found</h4>
+        <hr>       
+       
+        <ul class="list-group">
+           <% for(let issue of locals.project.issues){ %>
+            <li data-toggle="modal"  style="cursor: pointer;" class="list-group-item list-group-item-action mb-5">
+             <p>  Title : <span  style="color:red;"><%= issue.title %></span> </p>
+             <p>Issue : <strong><%= issue.description %></strong></p>
+             <p><small>Issue Created By <strong><%= issue.author %></strong></small></p>
+            
+             <p style="color:grey;">Issued At : <%= issue.createdAt %></p>
+             <p>
+              Labels : 
+              <% for(let label of issue.labels){ %>
+                <span style="border: 1px solid red; border-radius: 30px; padding : 8px; background-color: rgb(107, 193, 107);" class="ml-3"><strong><%= label %></strong></span>
+               <% } %>
+             </p>
+            </li>
+         <% } %>
+         
+        </ul>
+      <% }else { %>
+        <h4 class="mt-2" style="color:green;">No Issues Found</h4>
+      <% } %>
+
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Issue Found in <%= locals.project.name %></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="issue-form">
+                <div class="form-group">
+                  <label for="title" class="col-form-label">Title:</label>
+                  <input type="text" class="form-control"  id="title" required>
+                </div>
+                <div class="form-group">
+                  <label for="description" class="col-form-label">Description:</label>
+                  <textarea class="form-control" id="description" required></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="description" class="col-form-label">Labels:</label>
+                  <br>
+                  <input type="checkbox" class="issue-label" value="Functional"> Functional
+                  <br>
+                  <input type="checkbox" class="issue-label" value="Syntax"> Syntax
+                  <br>
+                  <input type="checkbox" class="issue-label" value="Logic"> Logic
+                  <br>
+                  <input type="checkbox"class="issue-label" value="Calculation"> Calculation
+                  <br>
+                  <input type="checkbox" class="issue-label" value="Crash"> Crash
+                  <br>
+                  <input type="checkbox" class="issue-label" value="UI"> UI
+                  <br>
+                  <input type="checkbox" class="issue-label" value="Backend"> Backend
+                  <br>
+                </div>
+
+
+                <div class="form-group">
+                  <label for="author" class="col-form-label" required>Author:</label>
+                  <input type="text" class="form-control" id="author" />
+                </div>
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-info" onclick="resetForm()" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-warning">Create Issue</button>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+
+</div>
+
+<script>
+    
+    $("#issue-form").submit(e=>{
+       e.preventDefault();
+      const title = $("#title").val();
+      const description = $("#description").val();
+      const author = $("#author").val();
+      let labels  = [] ;
+      
+      $('input[class="issue-label"]:checked').each((e , el )=>{
+       labels.push(el.value);
+      })
+
+      if(labels.length == 0){
+        window.alert("Please select at least one label")
+        return ;
+      }
+
+      const data = {
+        title,
+        description,
+        author,
+        labels : labels.join(','),
+      }
+
+      $.ajax({
+      url : `/project/<%= locals.project._id %>/create-issue`,
+      type : 'POST',
+      data : data,
+      success : function(data){
+         alert(data.message + " | " + " Issue ID: "+ data.issue._id)
+         window.location.reload();
+      },
+      error : function (err){
+        console.log(err)
+        alert(err.error);
+      }
+    })
+    
+    })
+
+ 
+
+    function resetForm() {
+      $('#issue-form').trigger("reset");
+    }
+
+
+
+</script>
